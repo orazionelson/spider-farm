@@ -13,5 +13,10 @@ BOT_NAME = 'mirabile'
 SPIDER_MODULES = ['mirabile.spiders']
 NEWSPIDER_MODULE = 'mirabile.spiders'
 
+
+SPIDER_MIDDLEWARES = {
+    'scrapy.contrib.spidermiddleware.itemsextender.ItemsExtenderMiddleware': 500,
+}
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'mirabile (+http://www.yourdomain.com)'

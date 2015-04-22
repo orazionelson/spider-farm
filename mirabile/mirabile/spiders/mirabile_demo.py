@@ -8,8 +8,8 @@ from mirabile.items import MirabileItem
 class MirabileDemoSpider(scrapy.Spider):
     name = 'mirabile-demo'
     allowed_domains = ['http://www.mirabileweb.it']
-#    start_urls = ['http://www.http://www.mirabileweb.it/']
-    start_urls = []
+    start_urls = ['http://www.mirabileweb.it/title/acta-capitulorum-generalium-ordinis-praedicatorum--title/18402']
+    #start_urls = []
 
 
     def get_field(self, field, xpath, sel, item):
