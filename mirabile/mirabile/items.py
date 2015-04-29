@@ -7,7 +7,24 @@
 
 from scrapy import Item, Field
 
-class  MirabileItem(Item):
+class  MirabileTitleItem(Item):
+    author = Field()
+    title = Field()
+    title_note = Field()
+#    secondary_note = Field() #not enough examples
+    other_attributions = Field()
+    other_author_related = Field()
+    related_works = Field()
+    incipit = Field()
+    explicit = Field()
+    references = Field()
+    references_note = Field()
+    editorial_note = Field()
+    shelfmarks = Field()
+    related_projects = Field()
+    permalink = Field()
+
+class  MirabileDemoItem(Item):
     # define the fields for your item here like:
     # name = Field()
     author = Field()

@@ -2,7 +2,7 @@
 import scrapy
 from scrapy.contrib.linkextractors import LinkExtractor
 
-from mirabile.items import MirabileItem
+from mirabile.items import MirabileDemoItem
 
 
 class MirabileDemoSpider(scrapy.Spider):
@@ -20,7 +20,7 @@ class MirabileDemoSpider(scrapy.Spider):
 
     def parse(self, response):
         self.log("Our starting URL is %s"%self.start_urls)
-        item = MirabileItem()
+        item = MirabileDemoItem()
         sel = response.selector.xpath('//td[@class="scheda_view"]')
         self.get_field('author', './/p/a/b/text()', sel, item)
         self.get_field('title', './/p[2]/b/i/text()', sel, item)
