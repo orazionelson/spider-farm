@@ -45,21 +45,22 @@ For deploying new spiders to scrapyd service we  refer to the [official document
 # Source code
 
 scrapy.git 
-  - contains scrapy framework with changes that allow for passing of arbitrary starting urls to spiders
+  - branch aip-stable contains scrapy framework with changes that allow for passing of arbitrary starting urls to spiders and special middleware for implementing the DEVEL option
+  - branch aip-xsl contains experimental support for XSL transformation of the default XML output
 
 scrapyd.git 
   - contains scrapyd webservice for deployment, running and monitoring of spiders
 
 portia.git 
-  - contains a snapshot of the Portia webscraper with a fix that makes it possible to deploy Portia based spiders to scrapyd service
+  - contains a snapshot of the Portia webscraper
 
 spider-farm.git 
-  - contains our own repository for hand-made spiders. 
+  - contains our own repository for hand-made spiders
 
 Our aim was to introduce minimal necessary changes to upstream repositories in order to ease maintainability burden. 
 
 The biggest changes are in scrapyd service, where we have added  interface scrape.json that takes just one parameter `urls` (which is a list of urls to be scraped)  and then for each url it starts a spider job that can be monitored via [scrapyd interface](http://scrapyd.readthedocs.org/en/latest/api.html). The project name and spider names have to match the project name and spider names deployed in the scrapyd service.
 
-Our change to scrapy.git is just a small patch that allows passing starting url to spiders. We've discovered that Portia is not compatible with scrapy/master and so we've based another branch on scrapy/0.25.1. This is the primary branch for our development.
+Our change to scrapy.git is just a small patch that allows passing starting url to spiders. We've discovered that Portia is not compatible with scrapy/master and so we've based another branch on scrapy/0.24. This is the primary branch for our development.
 
 ~~In portia.git we've just added a small bugfix that will be hopefully integrated into the official repository.~~ The bugfix is already upstream, but we keep our own fork of Portia in case we decide to change its spider template or handling of multiple urls.
