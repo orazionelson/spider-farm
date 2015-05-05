@@ -27,7 +27,7 @@ class MirabileTitleSpider(scrapy.Spider):
 
     def get_field(self, field, xpath, sel, item):
         try:
-            item[field] = sel.xpath(xpath).extract()
+            item[field] = map(unicode.strip, sel.xpath(xpath).extract())
  #           self.log("\nfield: %s\n$xpath: %s\nselector: %s\nitem: %s"%(field, xpath, sel, item[field]))
         except:
             scrapy.log.msg("Field %s not parsed correctly."%field)
@@ -38,6 +38,7 @@ class MirabileTitleSpider(scrapy.Spider):
         sel = response.selector.xpath('//td[@class="scheda_view"]')
         self.get_field('author', './p[1]/a/b/text()', sel, item)
         self.get_field('title', './p[2]/b/i/text()', sel, item)
+        self.get_field('title_note', './p[2]/font[1]/text()', sel, item)        
         self.get_field('related_works' , './/p[2]/a/text()', sel, item)
 
         oar_xpath = '//font[starts-with(text(),"Autori di riferimento")]/following-sibling::a//text()'
@@ -58,6 +59,12 @@ class MirabileTitleSpider(scrapy.Spider):
             item['references'] = ' '.join(map(unicode.strip, tmp.extract())[2:]).strip()
         except:
             scrapy.log.msg('Field references is not parsed correctly.')
+
+        self.get_field('references_note', '//p[starts-with(font,"Riferimenti")]/following::text()[position()<3]', response.selector, item)
+        first_shelfmark = response.selector.xpath('.//a[starts-with(@href,"/manuscript")]/text()[1]').extract()
+        if item['references_note'][1] == first_shelfmark:
+            item['references_note'] = u''
+        item['references_note'] = [u' '.join(item['references_note']).strip()]
 
         self.get_field('shelfmarks', './/a[starts-with(@href,"/manuscript")]/text()', sel, item)
 
