@@ -32,6 +32,35 @@ class MirabileTitleSpider(scrapy.Spider):
         except:
             scrapy.log.msg("Field %s not parsed correctly."%field)
 
+    def extract_shelfmarks(self, sel, item):
+        
+        def extract_shelfmark(sel, stopword):
+            '''
+            Given a selector for a shelfmark it iterates its following until stopword.
+            Returns all visited in a list.
+            '''
+            res = [sel.xpath('./text()')[0]]
+            for x in sel.xpath('./following::text()'):
+                if x.extract().startswith(stopword):
+                    break
+                else:
+                    res.append(x)
+            return u' '.join(map(lambda x: x.extract(), res)).strip()
+            
+        lastshelfmark = sel.xpath('.//a[starts-with(@href,"/manuscript")][last()]')
+        if not lastshelfmark:
+            return []
+        tmp = [extract_shelfmark(lastshelfmark, 'Altri progetti collegati:')] # sometimes Notes get included here
+        stopword = lastshelfmark.xpath('./text()')[0].extract()
+        shelfmarks = sel.xpath('.//a[starts-with(@href,"/manuscript")]')[:-1]
+        shelfmarks.reverse()
+        for shelfmark in shelfmarks:
+            res = extract_shelfmark(shelfmark, stopword)
+            tmp.append([res])
+            stopword = res[0]
+        tmp.reverse()
+        item['shelfmarks'] = tmp
+
     def parse(self, response):
         scrapy.log.msg("Our starting URL is %s"%self.start_urls)
         item = MirabileTitleItem()
@@ -66,7 +95,8 @@ class MirabileTitleSpider(scrapy.Spider):
             item['references_note'] = u''
         item['references_note'] = [u' '.join(item['references_note']).strip()]
 
-        self.get_field('shelfmarks', './/a[starts-with(@href,"/manuscript")]/text()', sel, item)
+        #self.get_field('shelfmarks', './/a[starts-with(@href,"/manuscript")]/text()', sel, item)
+        self.extract_shelfmarks(sel, item)        
 
         try:
             rel_proj_xpath = '//div[@class="altri_progetti"]/following-sibling::a/text()'
