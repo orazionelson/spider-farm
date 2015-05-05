@@ -30,7 +30,7 @@ class MirabileTitleSpider(scrapy.Spider):
             item[field] = map(unicode.strip, sel.xpath(xpath).extract())
  #           self.log("\nfield: %s\n$xpath: %s\nselector: %s\nitem: %s"%(field, xpath, sel, item[field]))
         except:
-            scrapy.log.msg("Field %s not parsed correctly."%field)
+            self.log("Field %s not parsed correctly."%field)
 
     def extract_shelfmarks(self, sel, item):
         
@@ -62,7 +62,7 @@ class MirabileTitleSpider(scrapy.Spider):
         item['shelfmarks'] = tmp
 
     def parse(self, response):
-        scrapy.log.msg("Our starting URL is %s"%self.start_urls)
+        self.log("Our starting URL is %s"%self.start_urls)
         item = MirabileTitleItem()
         sel = response.selector.xpath('//td[@class="scheda_view"]')
         self.get_field('author', './p[1]/a/b/text()', sel, item)
@@ -72,7 +72,7 @@ class MirabileTitleSpider(scrapy.Spider):
 
         oar_xpath = '//font[starts-with(text(),"Autori di riferimento")]/following-sibling::a//text()'
 
-        item['other_author_related'] = ' '.join(response.selector.xpath(oar_xpath).extract()).strip()
+        item['other_author_related'] = u' '.join(response.selector.xpath(oar_xpath).extract()).strip()
 
         inc_excp = "//p[starts-with(text(),'inc.')]/text()"
         inc_excp = response.selector.xpath(inc_excp).extract() #throws XPath error for selector sel, why?
@@ -81,13 +81,13 @@ class MirabileTitleSpider(scrapy.Spider):
             try:
                 item['explicit'] = inc_excp[1]
             except:
-                scrapy.log.msg('Incipit/explicit field may be parsed incorrectly.')
+                self.log('Incipit/explicit field may be parsed incorrectly.')
 
         try:
             tmp = response.selector.xpath('//p[starts-with(font,"Riferimenti")]//text()')
-            item['references'] = ' '.join(map(unicode.strip, tmp.extract())[2:]).strip()
+            item['references'] = u' '.join(map(unicode.strip, tmp.extract())[2:]).strip()
         except:
-            scrapy.log.msg('Field references is not parsed correctly.')
+            self.log('Field references is not parsed correctly.')
 
         self.get_field('references_note', '//p[starts-with(font,"Riferimenti")]/following::text()[position()<3]', response.selector, item)
         first_shelfmark = response.selector.xpath('.//a[starts-with(@href,"/manuscript")]/text()[1]').extract()
@@ -102,7 +102,7 @@ class MirabileTitleSpider(scrapy.Spider):
             rel_proj_xpath = '//div[@class="altri_progetti"]/following-sibling::a/text()'
             item['related_projects'] = sel.xpath(rel_proj_xpath).extract()
         except:
-            scrapy.log.msg('Field related_projects is not parsed correctly.')
+            self.log('Field related_projects is not parsed correctly.')
 
         self.get_field('permalink' , './/span[@class="permalink"]/text()', sel, item)
         yield item
