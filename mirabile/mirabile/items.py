@@ -21,6 +21,7 @@ class  MirabileTitleItem(Item):
     references_note = Field()
     editorial_note = Field()
     shelfmarks = Field()
+    shelfmarks_note = Field()
     related_projects = Field()
     permalink = Field()
 

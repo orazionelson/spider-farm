@@ -50,7 +50,13 @@ class MirabileTitleSpider(scrapy.Spider):
         lastshelfmark = sel.xpath('.//a[starts-with(@href,"/manuscript")][last()]')
         if not lastshelfmark:
             return []
-        tmp = [extract_shelfmark(lastshelfmark, 'Altri progetti collegati:')] # sometimes Notes get included here
+        if item['shelfmarks_note']:
+            stopword = item['shelfmarks_note'][:5] #hopefully the first tag will contain at least 5 characters
+        elif item['editorial_note']:
+            stopword = 'Nota redazionale:'
+        else:
+            stopword = 'Altri progetti collegati:'
+        tmp = [extract_shelfmark(lastshelfmark, stopword)]
         stopword = lastshelfmark.xpath('./text()')[0].extract()
         shelfmarks = sel.xpath('.//a[starts-with(@href,"/manuscript")]')[:-1]
         shelfmarks.reverse()
@@ -97,6 +103,24 @@ class MirabileTitleSpider(scrapy.Spider):
             item['references_note'] = u''
         item['references_note'] = [u' '.join(item['references_note']).strip()]
 
+        en_xpath = '//font[starts-with(text(),"Nota redazionale:")]/following-sibling::text()'
+        item['editorial_note'] = u' '.join(response.selector.xpath(en_xpath).extract()).strip()
+
+        if len(item['editorial_note']) > 0:
+            stopword = 'Nota redazionale'
+        else:
+            stopword = 'Altri progetti collegati:'
+
+        sn_xpath = './/a[starts-with(@href,"/manuscript")][last()]/following::text()[position()>1 and preceding-sibling::br[1] and preceding-sibling::br[2]]'
+        sn_sel = response.selector.xpath(sn_xpath).extract()
+        tmp = []
+        for x in sn_sel:
+            if x.startswith(stopword):
+                break
+            else:
+                tmp.append(x)
+        item['shelfmarks_note'] = u' '.join(tmp).strip()
+    
         #self.get_field('shelfmarks', './/a[starts-with(@href,"/manuscript")]/text()', sel, item)
         self.extract_shelfmarks(sel, item)        
 
