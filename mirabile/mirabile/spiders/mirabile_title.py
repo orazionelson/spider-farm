@@ -56,7 +56,7 @@ class MirabileTitleSpider(scrapy.Spider):
         shelfmarks.reverse()
         for shelfmark in shelfmarks:
             res = extract_shelfmark(shelfmark, stopword)
-            tmp.append([res])
+            tmp.append(res)
             stopword = res[0]
         tmp.reverse()
         item['shelfmarks'] = tmp
@@ -71,8 +71,10 @@ class MirabileTitleSpider(scrapy.Spider):
         self.get_field('related_works' , './/p[2]/a/text()', sel, item)
 
         oar_xpath = '//font[starts-with(text(),"Autori di riferimento")]/following-sibling::a//text()'
-
         item['other_author_related'] = u' '.join(response.selector.xpath(oar_xpath).extract()).strip()
+
+        en_xpath = '//font[starts-with(text(),"Nota redazionale:")]/following-sibling::text()'
+        item['editorial_note'] = u' '.join(response.selector.xpath(en_xpath).extract()).strip()
 
         inc_excp = "//p[starts-with(text(),'inc.')]/text()"
         inc_excp = response.selector.xpath(inc_excp).extract() #throws XPath error for selector sel, why?
