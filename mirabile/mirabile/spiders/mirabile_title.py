@@ -7,7 +7,7 @@ from mirabile.items import MirabileTitleItem
 
 class MirabileTitleSpider(scrapy.Spider):
     name = 'mirabile-title'
-    allowed_domains = ['http://www.mirabileweb.it']
+    allowed_domains = ['www.mirabileweb.it']
     start_urls = [
         'http://www.mirabileweb.it/title/divisio-textus-summae-contra-gentiles-thomae-de-aq-title/129674',
         'http://www.mirabileweb.it/title/sermo-homo-quidam-fecit-coenam-magnam-thomas-de-aq-title/13794',
