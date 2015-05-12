@@ -45,3 +45,21 @@ class JonasAuthorItem(Item):
     topic = Field()
 
     signature = Field()
+    
+
+class JonasManuscriptItem(Item):
+    signature = Field(input_processor=extract_text)
+    permalink = Field()
+    main_dating = Field()
+    language = Field()
+    input_status = Field()
+    number = Field()
+    author = Field()
+    title = Field()
+    incipit = Field()
+    foliation = Field()
+    state_of_witness = Field()
+    composition_period = Field()
+    known_work = Field()
+    acronym = Field()
+    bibliography = Field()
