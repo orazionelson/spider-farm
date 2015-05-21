@@ -12,7 +12,7 @@ This will create a directory ENV_NAME where all the dependencies will be install
   ```
 inside its directory.
 5. Install scrapyd by running `pip install -e SCRAPYD_DIR`
-6. Install scrapy by running `pip install -e SCRAPY_DIR` and checkout the branch `aip`
+6. Install scrapy by running `pip install -e SCRAPY_DIR` and checkout the branch `aip-stable`
 
 *Please note that it is important to install scrapy last, since otherwise the services will use version of scrapy they pull via their requirements. You can test which scrapy is going to be run by `which scrapy`.*
 
