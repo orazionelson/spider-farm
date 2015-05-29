@@ -6,16 +6,19 @@
 # http://doc.scrapy.org/en/latest/topics/items.html
 
 from scrapy import Item, Field
-from scrapy.contrib.loader.processor import Join, MapCompose
+from scrapy.contrib.loader.processor import TakeFirst, Join, MapCompose
 from w3lib.html import remove_tags, replace_entities, replace_escape_chars
 
 extract_text = MapCompose(remove_tags, replace_entities, replace_escape_chars)
 
-class JonasAuthorItem(Item):
+class JonasItem(Item):
+    author = Field()
+    permalink = Field(output_processor=TakeFirst)
+    signature = Field(input_processor=extract_text)
+
+class JonasAuthorItem(JonasItem):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    author = Field()
-    permalink = Field()
     born_before = Field()
     born_after = Field()
     dead_before = Field()
@@ -42,13 +45,9 @@ class JonasAuthorItem(Item):
     bibliography_title = Field()
     in_work = Field()
     pages = Field()
-    topic = Field()
+    topic = Field()    
 
-    signature = Field()
-    
-
-class JonasManuscriptItem(Item):
-    signature = Field(input_processor=extract_text)
+class JonasManuscriptItem(JonasItem):
     permalink = Field()
     main_dating = Field()
     language = Field()
@@ -64,10 +63,8 @@ class JonasManuscriptItem(Item):
     acronym = Field()
     bibliography = Field()
 
-class JonasWorkItem(Item):
-    permalink = Field()
+class JonasWorkItem(JonasItem):
     title = Field()
-    author = Field()
     incipit = Field()
     shape = Field()
     composition_period = Field()
@@ -84,4 +81,3 @@ class JonasWorkItem(Item):
     manuscripts = Field(input_processor=extract_text)
     bibliography_link = Field()
     bibliography = Field()
-    signature = Field(input_processor=extract_text)
