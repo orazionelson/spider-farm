@@ -12,8 +12,8 @@ from w3lib.html import remove_tags, replace_entities, replace_escape_chars
 extract_text = MapCompose(remove_tags, replace_entities, replace_escape_chars)
 
 class JonasItem(Item):
-    author = Field()
-    permalink = Field(output_processor=TakeFirst)
+    author = Field(input_processor=MapCompose(unicode.strip))
+    permalink = Field(output_processor=TakeFirst())
     signature = Field(input_processor=extract_text)
 
 class JonasAuthorItem(JonasItem):
@@ -26,8 +26,8 @@ class JonasAuthorItem(JonasItem):
     
     #OEuvres associees
     oeuvres_link_detailed_works = Field()
-    incipit = Field()
-    oeuvres_title = Field()
+    incipit = Field(input_processor=extract_text)
+    oeuvres_title = Field(input_processor=extract_text)
     editorial_note = Field()
     #note_on_work = Field() # is indistinguishable from incipit at this level
     #shape = Field() # is indistinguishable from author at this level
