@@ -7,6 +7,12 @@
 
 from scrapy import Item, Field
 
+class MirabileManuscriptItem(Item):
+    signature = Field()
+    name_role = Field()
+    title_author = Field()
+    titles = Field()
+
 class  MirabileTitleItem(Item):
     author = Field()
     title = Field()
