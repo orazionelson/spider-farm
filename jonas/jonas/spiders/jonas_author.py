@@ -33,7 +33,7 @@ class JonasAuthorSpider(scrapy.Spider):
                     '//div[@id="blocAssociationsOeuvres"]/div/a/@href',
                     MapCompose(absolutize_url)
                     )
-        oeuvres = '//div[@id="blocAssociationsOeuvres"]/div/span[@class="%s"]/text()'
+        oeuvres = '//div[@id="blocAssociationsOeuvres"]/div/span[@class="%s"]' # some text() nodes are empty
         l.add_xpath('incipit', oeuvres % 'curincipitoeuvre')
         l.add_xpath('oeuvres_title', oeuvres % 'curtitreoeuvre')
         tmp = []
