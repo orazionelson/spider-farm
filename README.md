@@ -16,6 +16,26 @@ inside its directory.
 
 *Please note that it is important to install scrapy last, since otherwise the services will use version of scrapy they pull via their requirements. You can test which scrapy is going to be run by `which scrapy`.*
 
+To ease the testing, here is the complete list of commands that creates a fresh environment inside directory `test`
+
+  ```
+  export TARGET_DIR=test
+  export ENV_DIR=test-env
+  mkdir $TARGET_DIR; cd $TARGET_DIR
+  git clone https://github.com/aipberoun/spider-farm
+  git clone https://github.com/aipberoun/scrapyd
+  git clone https://github.com/aipberoun/scrapy
+  git clone https://github.com/aipberoun/portia
+  virtualenv --system-site-packages $ENV_DIR
+  source $ENV_DIR/bin/activate
+  pip install -U pip
+  pip install -r portia/requirements.txt
+  pip install -e portia/slybot
+  pip install -e scrapyd/
+  pip install -e scrapy/
+  cd scrapy; git checkout aip-stable
+  ```
+
 # Running
 
 The service contains two independent parts: Portia and scrapyd.
@@ -26,9 +46,9 @@ The service contains two independent parts: Portia and scrapyd.
 
 ## Portia
 
-Run `twistd -n slyd` in the PORTIA_DIR/slyd directory. This will open Portia webapplication at the port 9001. Use it by entering `http://URL:9001/static/index.html` in the browser. There is a detailed explanation of this application on its website [scrapinghub/portia](https://github.com/scrapinghub/portia)
+Run `twistd -n slyd` in the `PORTIA_DIR/slyd` directory. This will open Portia webapplication at the port 9001. Use it by entering `http://YOUR_URL:9001/static/index.html` in the browser. There is a detailed explanation of this application on its website [scrapinghub/portia](https://github.com/scrapinghub/portia)
 
-Once you create a project it is stored in PORTIA_DIR/slyd/data/projects/ You can deploy these projects/spiders to a scrapyd service by running `scrapyd-deploy` inside a project's directory. The deployment and its configuration works the same as for handwritten spiders, see below.
+Once you create a project it is stored in PORTIA_DIR/slyd/data/projects/ You can deploy these projects/spiders to a scrapyd service by running `scrapyd-deploy` inside a project's directory. The deployment and its configuration works the same as for handwritten spiders, see the next section for links to the official scrapyd documentation. The template for `scrapy.cfg` created by Portia for its spiders is in `PORTIA_DIR/slyd/slyd/projecttemplates.py`
 
 ## Scrapyd
 
