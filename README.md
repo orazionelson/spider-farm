@@ -1,7 +1,36 @@
 # Installation
 
+**Short story:**
+
+This list of commands creates a fresh environment inside directory `test` and runs the `scrapyd` service which will store its files in directory called `scrapyd-files`. The directory `test-env` is created by `virtualenv` and contains all required libraries.
+
+  ```
+  export TARGET_DIR=test
+  export ENV_DIR=test-env
+  export SD_DIR=scrapyd-files
+  mkdir $TARGET_DIR; cd $TARGET_DIR
+  virtualenv --system-site-packages $ENV_DIR
+  source $ENV_DIR/bin/activate
+  git clone https://github.com/aipberoun/spider-farm
+  git clone https://github.com/aipberoun/scrapyd
+  git clone https://github.com/aipberoun/scrapy
+  git clone https://github.com/aipberoun/portia
+  pip install -U pip
+  pip install -r portia/requirements.txt
+  pip install -e portia/slybot
+  pip install -e scrapyd/
+  pip install -e scrapy/
+  cd scrapy; git checkout aip-stable; cd ..
+  mkdir $SD_DIR; cd $SD_DIR
+  scrapyd
+  ```
+
+There are no preinstalled spiders. To deploy a spider into a running scrapyd service just open up a new terminal window, go to the project directory (e.g. `spider-farm/mirabile`) and run `scrapyd-deploy`. 
+
+**Explanation:**
+
 1. First create a virtual environment by running `virtualenv ENV_NAME`, e.g. `virtualenv webscraping-test` 
-This will create a directory ENV_NAME where all the dependencies will be installed. 
+This will create a directory `ENV_NAME` where all the dependencies will be installed. 
 2. Activate the environment by running `source ENV_NAME/bin/activate` (You can deactivate the environment by running `deactivate`.) If `pip --version` shows something less than 6.0.0, please update pip by running `pip install -U pip`
 3. Clone all aipberoun repositories by running `git clone REPOSITORY_URL` for each REPOSITORY_URL described in section [Source code](#source-code) below.
 4. Install Portia according to its [documentation](https://github.com/scrapinghub/portia) by running 
@@ -12,29 +41,9 @@ This will create a directory ENV_NAME where all the dependencies will be install
   ```
 inside its directory.
 5. Install scrapyd by running `pip install -e SCRAPYD_DIR`
-6. Install scrapy by running `pip install -e SCRAPY_DIR` and checkout the branch `aip-stable`
+6. Install scrapy by running `pip install -e SCRAPY_DIR` and checkout the branch `aip-stable` by running `git checkout aip-stable`
 
 *Please note that it is important to install scrapy last, since otherwise the services will use version of scrapy they pull via their requirements. You can test which scrapy is going to be run by `which scrapy`.*
-
-To ease the testing, here is the complete list of commands that creates a fresh environment inside directory `test`
-
-  ```
-  export TARGET_DIR=test
-  export ENV_DIR=test-env
-  mkdir $TARGET_DIR; cd $TARGET_DIR
-  git clone https://github.com/aipberoun/spider-farm
-  git clone https://github.com/aipberoun/scrapyd
-  git clone https://github.com/aipberoun/scrapy
-  git clone https://github.com/aipberoun/portia
-  virtualenv --system-site-packages $ENV_DIR
-  source $ENV_DIR/bin/activate
-  pip install -U pip
-  pip install -r portia/requirements.txt
-  pip install -e portia/slybot
-  pip install -e scrapyd/
-  pip install -e scrapy/
-  cd scrapy; git checkout aip-stable
-  ```
 
 # Running
 
