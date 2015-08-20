@@ -20,6 +20,7 @@ This list of commands creates a fresh environment inside directory `test` and ru
   pip install -e portia/slybot
   pip install -e scrapyd/
   pip install -e scrapy/
+  pip install scrapyd-client
   cd scrapy; git checkout aip-stable; cd ..
   mkdir $SD_DIR; cd $SD_DIR
   scrapyd
